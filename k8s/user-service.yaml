@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+data:
+  DB_DATASOURCE: "jdbc:postgresql://postgres:5432/userservice"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+  EXPIRATION_JWT: "3600000"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-service-secret
+type: Opaque
+stringData:
+  DB_USERNAME: postgres
+  DB_PASSWORD: admin
+  SECRET_JWT: "une-chaine-secrete-d-au-moins-32-caracteres-a-changer"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: user-service:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: user-service-config
+            - secretRef:
+                name: user-service-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  type: NodePort
+  selector:
+    app: user-service
+  ports:
+    - port: 8080
+      targetPort: 8080
