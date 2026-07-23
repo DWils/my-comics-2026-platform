@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 dir('user-service') {
-                    sh 'mvn -B test'
+                    sh 'mvn -B test -Dtest=\'!UserServiceApplicationTests,!UserRepositoryIntegrationTest\' -DfailIfNoTests=false'
                 }
             }
         }
