@@ -6,6 +6,7 @@ function Home() {
       <h1>MyComics2026</h1>
       <p>Plateforme de streaming de comics — squelette frontend (module 9).</p> 
       <Link to="/login">Se connecter</Link>
+      <Link to="/register">S'inscrire</Link>
     </section>
   );
 }
