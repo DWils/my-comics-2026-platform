@@ -30,3 +30,9 @@ export async function login(
   );
   return data;
 }
+
+// GET /api/users/me — protégé par JWT.
+export async function getCurrentUser(): Promise<UserResponseDTO> {
+  const { data } = await apiClient.get<UserResponseDTO>('/api/users/me');
+  return data;
+}
